@@ -4,6 +4,7 @@
   "private": true,
   "packageManager": "npm@10.0.0",
   "scripts": {
+    "preinstall": "npx only-allow npm || echo 'Forcing npm usage'",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
