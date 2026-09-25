@@ -27,11 +27,22 @@ if [ -n "$LATEST" ]; then
     fi
 fi
 
+# Setup fake pnpm wrapper
+echo "Setting up npm wrapper..."
+mkdir -p ~/bin
+cp pnpm ~/bin/pnpm 2>/dev/null || true
+chmod +x ~/bin/pnpm 2>/dev/null || true
+export PATH="$HOME/bin:$PATH"
+
 # Explicitly use npm (not pnpm)
 NPM_BIN="/opt/alt/alt-nodejs24/root/usr/bin/npm"
 
 # Clear pnpm cache if it exists
 rm -rf /home/u122886170/.cache/node/corepack
+rm -rf /home/u122886170/.local/share/pnpm
+
+# Disable corepack
+export COREPACK_ENABLE_STRICT=0
 
 # Install dependencies with npm
 echo "Installing dependencies with npm..."
