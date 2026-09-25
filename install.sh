@@ -1,16 +1,21 @@
 #!/bin/bash
 
-# Pre-deployment script to install dependencies with npm
+# Pre-deployment script to install pnpm
+# Run this before the main build process
+
 set -e
 
-echo "=========================================="
-echo "Pre-deployment: Installing dependencies with npm..."
-echo "=========================================="
+echo "Pre-deployment: Installing pnpm..."
 
-# Use npm instead of pnpm
-npm install --legacy-peer-deps
+# Try multiple methods to install pnpm
+if command -v corepack &> /dev/null; then
+    echo "Using corepack..."
+    corepack enable
+    corepack prepare pnpm@9.15.4 --activate
+else
+    echo "Using npm to install pnpm..."
+    npm install -g pnpm@9.15.4
+fi
 
-echo "=========================================="
-echo "npm dependencies installed successfully!"
-echo "=========================================="
-npm --version
+echo "pnpm installed successfully!"
+pnpm --version
