@@ -50,7 +50,9 @@ export default async function convertFile(
   const data = await ffmpeg.readFile(output);
   // Use the correct full MIME type (e.g. "video/mp4"), not just "video"
   const outputMime = `video/${videoSettings.videoType}`;
-  const blob = new Blob([data.buffer], { type: outputMime });
+  // Handle FileData type (Uint8Array | string)
+  const blobData = typeof data === 'string' ? new TextEncoder().encode(data) : data;
+  const blob = new Blob([blobData], { type: outputMime });
   const url = URL.createObjectURL(blob);
   return { url, output, outputBlob: blob };
 }
