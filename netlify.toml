@@ -1,0 +1,9 @@
+# Netlify-style build config (some hosts read this)
+[build]
+  command = "npm install --legacy-peer-deps && npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_VERSION = "10"
+  COREPACK_ENABLE_STRICT = "0"
