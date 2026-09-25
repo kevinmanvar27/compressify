@@ -1,17 +1,18 @@
 #!/bin/bash
 
-# Alternative Build Script (simpler version)
-# Use this if deploy.sh has issues
-
+# Build Script - Use npm instead of pnpm
 set -e
 
-echo "Installing pnpm..."
-npm install -g pnpm@9.15.4 || corepack enable
+echo "=========================================="
+echo "Building Next.js Application with npm"
+echo "=========================================="
 
 echo "Installing dependencies..."
-pnpm install
+npm install --legacy-peer-deps
 
-echo "Building..."
-pnpm run build
+echo "Building application..."
+npm run build
 
+echo "=========================================="
 echo "Build complete!"
+echo "=========================================="

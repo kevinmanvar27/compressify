@@ -27,7 +27,7 @@ echo "Current directory: $(pwd)"
 
 # Install dependencies using Hostinger's Node.js
 echo "=========================================="
-echo "Installing dependencies..."
+echo "Installing dependencies with npm..."
 echo "=========================================="
 
 # Use Hostinger's npm path
@@ -35,10 +35,10 @@ NPM_PATH="/opt/alt/alt-nodejs24/root/usr/bin/npm"
 
 if [ -f "$NPM_PATH" ]; then
     echo "Using Hostinger npm: $NPM_PATH"
-    $NPM_PATH install --production --ignore-scripts
+    $NPM_PATH install --legacy-peer-deps
 else
     echo "Using system npm"
-    npm install --production --ignore-scripts
+    npm install --legacy-peer-deps
 fi
 
 # Build the application
@@ -55,5 +55,5 @@ fi
 echo "=========================================="
 echo "Deployment Completed Successfully!"
 echo "=========================================="
-echo "Your site is live at: http://compressify.gujjugarba.com"
+echo "Your site is live at: https://compressify.gujjugarba.com"
 echo "=========================================="

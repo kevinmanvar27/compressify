@@ -27,17 +27,23 @@ if [ -n "$LATEST" ]; then
     fi
 fi
 
-# Install dependencies
-echo "Installing dependencies..."
-/opt/alt/alt-nodejs24/root/usr/bin/npm install --production --ignore-scripts
+# Explicitly use npm (not pnpm)
+NPM_BIN="/opt/alt/alt-nodejs24/root/usr/bin/npm"
+
+# Clear pnpm cache if it exists
+rm -rf /home/u122886170/.cache/node/corepack
+
+# Install dependencies with npm
+echo "Installing dependencies with npm..."
+$NPM_BIN install --legacy-peer-deps
 
 # Build the application
 echo "Building application..."
-/opt/alt/alt-nodejs24/root/usr/bin/npm run build
+$NPM_BIN run build
 
 # Restart the application (if pm2 or similar is used)
 if command -v pm2 &> /dev/null; then
-    pm2 restart compressify || pm2 start npm --name "compressify" -- start
+    pm2 restart compressify || pm2 start $NPM_BIN --name "compressify" -- start
 fi
 
 echo "=========================================="
