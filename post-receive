@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Git Post-Receive Hook for Hostinger Auto-Deploy
+# Place this file in: .git/hooks/post-receive (on Hostinger server)
+
+echo "=========================================="
+echo "Git Push Received - Starting Auto Deploy"
+echo "=========================================="
+
+# Change to the working directory
+cd /home/u122886170/domains/compressify.gujjugarba.com || exit
+
+# Pull the latest changes
+git --git-dir=/home/u122886170/domains/compressify.gujjugarba.com/.git --work-tree=/home/u122886170/domains/compressify.gujjugarba.com checkout -f
+
+# Get the latest build version
+LATEST=$(ls -t /home/u122886170/domains/compressify.gujjugarba.com/hbuilds/versions/ 2>/dev/null | head -1)
+
+if [ -n "$LATEST" ]; then
+    BUILD_DIR="/home/u122886170/domains/compressify.gujjugarba.com/hbuilds/versions/$LATEST/nodejs/server"
+    echo "Build directory: $BUILD_DIR"
+    
+    # Copy files to build directory if it exists
+    if [ -d "$BUILD_DIR" ]; then
+        rsync -av --exclude='.git' --exclude='node_modules' /home/u122886170/domains/compressify.gujjugarba.com/ "$BUILD_DIR/"
+        cd "$BUILD_DIR"
+    fi
+fi
+
+# Install dependencies
+echo "Installing dependencies..."
+/opt/alt/alt-nodejs24/root/usr/bin/npm install --production --ignore-scripts
+
+# Build the application
+echo "Building application..."
+/opt/alt/alt-nodejs24/root/usr/bin/npm run build
+
+# Restart the application (if pm2 or similar is used)
+if command -v pm2 &> /dev/null; then
+    pm2 restart compressify || pm2 start npm --name "compressify" -- start
+fi
+
+echo "=========================================="
+echo "Auto-Deploy Completed!"
+echo "=========================================="

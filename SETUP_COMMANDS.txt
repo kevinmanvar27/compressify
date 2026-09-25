@@ -1,0 +1,84 @@
+╔══════════════════════════════════════════════════════════════╗
+║        HOSTINGER AUTO-DEPLOY - COPY & PASTE COMMANDS         ║
+╚══════════════════════════════════════════════════════════════╝
+
+🔐 STEP 1: SSH INTO HOSTINGER
+┌──────────────────────────────────────────────────────────────┐
+│ ssh u122886170@compressify.gujjugarba.com                    │
+└──────────────────────────────────────────────────────────────┘
+
+📂 STEP 2: GO TO YOUR SITE DIRECTORY
+┌──────────────────────────────────────────────────────────────┐
+│ cd /home/u122886170/domains/compressify.gujjugarba.com      │
+└──────────────────────────────────────────────────────────────┘
+
+🔧 STEP 3: CREATE AUTO-DEPLOY HOOK
+┌──────────────────────────────────────────────────────────────┐
+│ mkdir -p .git/hooks                                          │
+│ cat > .git/hooks/post-receive << 'EOF'                       │
+│ #!/bin/bash                                                  │
+│ cd /home/u122886170/domains/compressify.gujjugarba.com      │
+│ git pull origin main                                         │
+│ LATEST=$(ls -t hbuilds/versions/ 2>/dev/null | head -1)     │
+│ if [ -n "$LATEST" ]; then                                    │
+│     cd hbuilds/versions/$LATEST/nodejs/server                │
+│ fi                                                           │
+│ /opt/alt/alt-nodejs24/root/usr/bin/npm install --production --ignore-scripts │
+│ /opt/alt/alt-nodejs24/root/usr/bin/npm run build            │
+│ echo "Auto-deploy completed!"                                │
+│ EOF                                                          │
+│                                                              │
+│ chmod +x .git/hooks/post-receive                            │
+└──────────────────────────────────────────────────────────────┘
+
+✅ STEP 4: TEST AUTO-DEPLOY
+┌──────────────────────────────────────────────────────────────┐
+│ # From your local machine:                                   │
+│ git add .                                                    │
+│ git commit -m "test auto-deploy"                            │
+│ git push origin main                                         │
+└──────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+
+🚨 IF AUTO-DEPLOY DOESN'T WORK - USE MANUAL COMMAND:
+
+┌──────────────────────────────────────────────────────────────┐
+│ cd /home/u122886170/domains/compressify.gujjugarba.com      │
+│ git pull origin main                                         │
+│ LATEST=$(ls -t hbuilds/versions/ | head -1)                 │
+│ cd hbuilds/versions/$LATEST/nodejs/server                    │
+│ /opt/alt/alt-nodejs24/root/usr/bin/npm install --production --ignore-scripts │
+│ /opt/alt/alt-nodejs24/root/usr/bin/npm run build            │
+└──────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+
+🎯 ALTERNATIVE: USE HOSTINGER PANEL
+
+1. Login to Hostinger hPanel
+2. Go to "Git" or "GitHub" section
+3. Connect your repository
+4. Set Build Command:
+   /opt/alt/alt-nodejs24/root/usr/bin/npm install --production --ignore-scripts && /opt/alt/alt-nodejs24/root/usr/bin/npm run build
+5. Enable "Auto Deploy"
+6. Push code!
+
+═══════════════════════════════════════════════════════════════
+
+✅ AFTER SETUP - YOUR WORKFLOW:
+
+Just do this on your local machine:
+  git add .
+  git commit -m "your changes"
+  git push origin main
+
+Hostinger will automatically:
+  ✓ Pull your code
+  ✓ Install node_modules
+  ✓ Build your app
+  ✓ Restart server
+
+NO MANUAL COMMANDS NEEDED! 🎉
+
+═══════════════════════════════════════════════════════════════
