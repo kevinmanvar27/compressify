@@ -11,7 +11,7 @@ const nextConfig = {
   serverExternalPackages: ["fluent-ffmpeg"],
 
   // CORS headers for the /api/compress endpoint
-  // So Laravel (gujjugarba.com) can POST videos to compress.rektech.work
+  // So Laravel (gujjugarba.com) can POST videos to compressify.gujjugarba.com
   async headers() {
     return [
       {
